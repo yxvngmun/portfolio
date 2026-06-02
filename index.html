@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!--
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │  PORTFOLIO — single-file site. No build tools, no dependencies.      │
+  │                                                                       │
+  │  HOW TO EDIT:                                                         │
+  │   • Everything between  [[ EDIT ]]  markers is yours to change.       │
+  │   • Personal details are near the top of the <body>.                 │
+  │   • To host it: see the instructions I gave you in chat              │
+  │     (GitHub Pages / Netlify drop / Vercel — all free).               │
+  │                                                                       │
+  │  STRUCTURE (top to bottom):                                          │
+  │   1. <head>  — fonts, all the CSS (the "look").                      │
+  │   2. header  — your name + nav.                                      │
+  │   3. hero    — the big intro line.                                   │
+  │   4. about   — short bio + skills.                                   │
+  │   5. work    — the project cards (the main event).                  │
+  │   6. contact — links.                                                │
+  └─────────────────────────────────────────────────────────────────────┘
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Muneeb Ansari — Software & Data</title>
+<meta name="description" content="Portfolio of Muneeb Ansari — full-stack developer and data/ML enthusiast." />
+
+<!-- Google Fonts: a serif display face + a mono face. This pairing is what
+     gives the page its "editorial terminal" character instead of the usual
+     generic sans look. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ───────────────────────────────────────────────────────────────────
+     DESIGN TOKENS — change these few variables to re-skin the whole site.
+     ─────────────────────────────────────────────────────────────────── */
+  :root {
+    --bg:      #0e0d0c;   /* warm near-black background          */
+    --bg-2:    #16140f;   /* slightly lighter panel              */
+    --ink:     #f4efe6;   /* main text (cream)                   */
+    --muted:   #9a9588;   /* secondary text                      */
+    --line:    #2a2722;   /* hairline borders                    */
+    --accent:  #e9b949;   /* signature gold — links, highlights  */
+    --accent-2:#7fd4c1;   /* secondary mint — for data/ML tags   */
+    --maxw:    1280px;    /* full-width desktop content cap       */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* a faint grid texture in the background — subtle, premium feel */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* mono helper — used for labels, tags, the "system" voice */
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  /* small uppercase section label, e.g. "01 / WORK" */
+  .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ───────────────────────────── HEADER ───────────────────────────── */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+  }
+  .brand { font-weight: 900; font-size: 22px; letter-spacing: -0.01em; }
+  .brand span { color: var(--accent); }
+  .nav-links { display: flex; gap: 34px; }
+  .nav-links a {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; letter-spacing: 0.05em; color: var(--muted);
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ───────────────────────────── HERO ─────────────────────────────── */
+  .hero { padding: 120px 0 90px; }
+  .hero .label { margin-bottom: 28px; display: block; }
+  .hero h1 {
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 1.02;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    max-width: 16ch;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p {
+    margin-top: 34px;
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: 21px;
+  }
+  .hero-actions { margin-top: 44px; display: flex; gap: 18px; flex-wrap: wrap; }
+  .btn {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; letter-spacing: 0.04em;
+    padding: 14px 26px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    transition: all .2s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary { background: var(--accent); color: #1a1407; border-color: var(--accent); font-weight: 700; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ──────────────────────────── SECTIONS ──────────────────────────── */
+  section { padding: 80px 0; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; align-items: baseline; gap: 24px; margin-bottom: 56px; }
+  .sec-head h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 900; letter-spacing: -0.01em; }
+
+  /* ABOUT: two-column on desktop (bio | skills) */
+  .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; }
+  .about-grid p { color: var(--ink); font-size: 20px; margin-bottom: 20px; }
+  .about-grid p .hl { color: var(--accent); font-style: italic; }
+  .skills-block h3 {
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+  .chip {
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    padding: 7px 14px; border: 1px solid var(--line); border-radius: 2px;
+    color: var(--ink); background: var(--bg-2);
+  }
+  .chip.data { border-color: color-mix(in srgb, var(--accent-2) 45%, var(--line)); color: var(--accent-2); }
+
+  /* WORK: full-width project rows, each numbered. This horizontal,
+     index-led layout is deliberately un-generic. */
+  .project {
+    display: grid;
+    grid-template-columns: 90px 1fr 320px;
+    gap: 40px;
+    padding: 48px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: background .25s;
+  }
+  .project:hover { background: linear-gradient(90deg, transparent, var(--bg-2) 60%, transparent); }
+  .project .idx { font-family: "JetBrains Mono", monospace; font-size: 15px; color: var(--accent); padding-top: 8px; }
+  .project h3 { font-size: 32px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .project .role { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .project .role .priv {
+    color: var(--accent-2);
+    border: 1px solid color-mix(in srgb, var(--accent-2) 40%, var(--line));
+    border-radius: 2px; padding: 2px 8px; margin-left: 10px; font-size: 11px;
+  }
+  .project p { color: var(--muted); font-size: 18px; max-width: 60ch; }
+  .project ul { list-style: none; margin: 16px 0 0; }
+  .project ul li { color: var(--muted); font-size: 16px; padding-left: 22px; position: relative; margin-bottom: 6px; }
+  .project ul li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+  .project .stack { display: flex; flex-wrap: wrap; gap: 8px; }
+  .project .stack .chip { font-size: 12px; padding: 6px 12px; }
+  .project .links { display: flex; gap: 18px; margin-top: 22px; }
+  .project .links a {
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    color: var(--accent); border-bottom: 1px solid transparent; transition: border-color .2s;
+  }
+  .project .links a:hover { border-color: var(--accent); }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
+  .contact-grid h2 { font-size: clamp(38px, 6vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; }
+  .contact-grid h2 a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .contact-links { display: flex; flex-direction: column; gap: 14px; }
+  .contact-links a {
+    font-family: "JetBrains Mono", monospace; font-size: 15px;
+    color: var(--muted); display: flex; justify-content: space-between;
+    border-bottom: 1px solid var(--line); padding: 12px 0; transition: color .2s;
+  }
+  .contact-links a:hover { color: var(--accent); }
+
+  footer { padding: 40px 0 60px; }
+  footer .wrap { display: flex; justify-content: space-between; color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 12px; }
+
+  /* ─────────────────────────── RESPONSIVE ─────────────────────────── */
+  @media (max-width: 900px) {
+    .wrap { padding: 0 24px; }
+    .nav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .project { grid-template-columns: 1fr; gap: 18px; padding: 36px 0; }
+    .project .idx { padding-top: 0; }
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* tiny entrance animation — fades sections up as you scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════ HEADER ════════════════════════════ -->
+<header>
+  <div class="wrap nav">
+    <!-- [[ EDIT: your initials / name ]] -->
+    <div class="brand">MA<span>.</span></div>
+    <nav class="nav-links">
+      <a href="#about">about</a>
+      <a href="#work">work</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero" style="border-top:none;">
+  <div class="wrap">
+    <span class="label">Software Developer · Data &amp; ML</span>
+    <h1>I build <em>full-stack products</em> end to end — and the <em>AI</em> behind them.</h1>
+    <p>
+      Computer Science student at Bahria University, Lead Frontend Developer, and a solo
+      founder. I build full-stack products with Next.js, TypeScript and Python backends —
+      and the machine-learning and AI features behind them, from intent classifiers to
+      LLM-driven experiences. I like owning the whole loop: data, backend, interface, and brand.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#work">View work →</a>
+      <!-- [[ EDIT: drop your real email/LinkedIn here ]] -->
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════ ABOUT ═════════════════════════════ -->
+<section id="about" class="reveal">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">01</span><h2>About</h2></div>
+    <div class="about-grid">
+      <div>
+        <p>
+          I'm a developer who's just as comfortable wiring up a React frontend to a
+          backend API as I am cleaning a dataset and training a model. Most of my work
+          lives at that intersection — <span class="hl">building products that are powered by AI and data</span>.
+        </p>
+        <p>
+          I'm currently <span class="hl">Lead Frontend Developer at Anum Vista</span>,
+          architecting the interface for a fintech finance &amp; accounting platform, while
+          building <span class="hl">Footy Pool 2026</span> — a full-stack World Cup
+          prediction game with an AI football pundit — as a solo founder on the side.
+          Earlier I built an AI mental-health chatbot from scratch, with intent
+          classification and retrieval over real WHO guidelines.
+        </p>
+        <p>
+          I move fast, ship to production, document what I build, and adapt to whatever
+          the stack demands.
+        </p>
+      </div>
+      <div class="skills-block">
+        <h3>Languages &amp; Frameworks</h3>
+        <div class="chips">
+          <span class="chip">TypeScript</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">React</span>
+          <span class="chip">Next.js</span>
+          <span class="chip">Node.js</span>
+          <span class="chip">Express</span>
+          <span class="chip">MongoDB</span>
+          <span class="chip">PostgreSQL</span>
+          <span class="chip">Python</span>
+        </div>
+        <h3>AI &amp; ML</h3>
+        <div class="chips">
+          <span class="chip data">scikit-learn</span>
+          <span class="chip data">Pandas</span>
+          <span class="chip data">NLP</span>
+          <span class="chip data">FAISS / RAG</span>
+          <span class="chip data">LLM Prompt Design</span>
+        </div>
+        <h3>Also</h3>
+        <div class="chips">
+          <span class="chip">Git</span>
+          <span class="chip">SQL</span>
+          <span class="chip">Tailwind CSS</span>
+          <span class="chip">Vercel</span>
+          <span class="chip">REST APIs</span>
+          <span class="chip">Streamlit</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════ WORK ══════════════════════════════ -->
+<section id="work" class="reveal">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">02</span><h2>Selected Work</h2></div>
+
+    <!-- ── PROJECT 1 ─────────────────────────────────────────────── -->
+    <article class="project">
+      <div class="idx mono">001</div>
+      <div>
+        <h3>Footy Pool 2026</h3>
+        <div class="role mono">Founder &amp; Solo Developer · Live</div>
+        <p>
+          A free-to-play World Cup prediction game with an AI football pundit. I designed
+          and built the full-stack app from scratch in Next.js 16 (App Router, Turbopack),
+          React 19 and TypeScript, deployed on Vercel with a push-to-deploy workflow.
+          Players predict matches, climb a live leaderboard, and get personality-driven
+          roasts of their picks from "Rano," an AI pundit I built.
+        </p>
+        <ul>
+          <li>Architected "Rano," an AI pundit that generates shareable, persona-driven roasts — designing the prompt system and brand voice.</li>
+          <li>Built a pari-mutuel (pool-based) token model with randomized per-match metrics for a virtual-currency prediction market — no real-money betting.</li>
+          <li>Responsive, component-driven UI in Tailwind CSS v4 (custom design tokens): prediction interface, rankings, pools, profiles, and an early-access landing page with email capture.</li>
+          <li>Created the full brand system end to end — logo, prism gradient identity, typography, and marketing assets.</li>
+        </ul>
+        <div class="links">
+          <a href="https://footy-pool-2026.vercel.app" target="_blank" rel="noopener">Live site ↗</a>
+          <a href="https://github.com/yxvngmun/footy-pool-2026" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="stack">
+        <span class="chip">Next.js 16</span>
+        <span class="chip">React 19</span>
+        <span class="chip">TypeScript</span>
+        <span class="chip">Tailwind v4</span>
+        <span class="chip data">AI / LLM</span>
+        <span class="chip">Vercel</span>
+      </div>
+    </article>
+
+    <!-- ── PROJECT 2 ─────────────────────────────────────────────── -->
+    <article class="project">
+      <div class="idx mono">002</div>
+      <div>
+        <h3>MindSpace</h3>
+        <div class="role mono">AI Mental-Health Chatbot · Solo project <span class="priv">PRIVATE REPO</span></div>
+        <p>
+          A supportive chatbot that reads how someone is feeling and replies safely. It
+          classifies the intent behind each message with a TF-IDF + neural-network model
+          (~93% test accuracy), then routes by confidence: a confident guess gets an
+          empathetic reply learned from real counseling data, while an unsure one
+          retrieves an authentic passage from official WHO guidelines.
+        </p>
+        <ul>
+          <li>Full data-science pipeline: EDA, cleaning, NLP preprocessing, train/test evaluation.</li>
+          <li>RAG-style retrieval over 554 WHO passages using sentence embeddings + FAISS.</li>
+          <li>Tone-correction and anti-repetition guardrails for natural conversation.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <span class="chip data">Python</span>
+        <span class="chip data">scikit-learn</span>
+        <span class="chip data">NLP</span>
+        <span class="chip data">FAISS</span>
+        <span class="chip">Streamlit</span>
+      </div>
+    </article>
+
+    <!-- ── PROJECT 3 ─────────────────────────────────────────────── -->
+    <article class="project">
+      <div class="idx mono">003</div>
+      <div>
+        <h3>Anum Vista — Fintech Finance &amp; Accounting Software</h3>
+        <div class="role mono">Lead Frontend Developer · Current <span class="priv">PRIVATE</span></div>
+        <p>
+          Leading the frontend of a financial management system — real-time ledgers and
+          audit trails backed by a FastAPI service. I'm architecting the interface in
+          Next.js and TypeScript with Tailwind CSS, translating complex accounting
+          workflows into a clear, reliable product.
+        </p>
+        <ul>
+          <li>Architecting the frontend for real-time ledgers and audit trails.</li>
+          <li>Integrating a FastAPI + PostgreSQL backend with a Next.js / TypeScript UI.</li>
+          <li>Owning the frontend architecture and component system end to end.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <span class="chip">Next.js</span>
+        <span class="chip">TypeScript</span>
+        <span class="chip">FastAPI</span>
+        <span class="chip">PostgreSQL</span>
+        <span class="chip">Tailwind CSS</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════ CONTACT ═══════════════════════════ -->
+<section id="contact" class="reveal">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">03</span><h2>Contact</h2></div>
+    <div class="contact-grid">
+      <div>
+        <h2>Let's<br />work<br />together <a href="mailto:munaeb2005@gmail.com">↗</a></h2>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:munaeb2005@gmail.com"><span>Email</span><span>munaeb2005@gmail.com</span></a>
+        <a href="https://github.com/yxvngmun" target="_blank" rel="noopener"><span>GitHub</span><span>@yxvngmun</span></a>
+        <a href="https://www.linkedin.com/in/muneeb-ansari-774b0329a/" target="_blank" rel="noopener"><span>LinkedIn</span><span>/in/muneeb-ansari</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> Muneeb Ansari</span>
+    <span>Built from scratch · no templates</span>
+  </div>
+</footer>
+
+<script>
+  // current year in the footer
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // reveal-on-scroll: adds .in when a section enters the viewport
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+</script>
+
+</body>
+</html>
